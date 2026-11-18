@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#edf5f2">
+  <meta name="description" content="Làm sạch, phân tích và xuất báo cáo từ Google Sheets với DataLens Studio.">
+  <title>DataLens Studio · Phân tích dữ liệu</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.mjs"></script>
+</head>
+<body>
+  <div class="desktop">
+    <header class="desktop-bar">
+      <a class="brand" href="/" aria-label="DataLens Studio · Trang đầu">
+        <span class="brand-mark" data-icon="brand"></span>
+        <span>DataLens <span class="brand-studio">Studio</span></span>
+      </a>
+      <button class="help-button" data-action="help"><span data-icon="help"></span> Trợ giúp</button>
+    </header>
+
+    <div class="window">
+      <header class="window-bar">
+        <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="window-title"><span data-icon="window"></span> Không gian phân tích</span>
+        <button class="icon-button reset-button" data-action="reset" aria-label="Bắt đầu phiên phân tích mới" title="Phiên phân tích mới"><span data-icon="reset"></span></button>
+      </header>
+
+      <div class="workbench">
+        <aside class="sidebar" aria-label="Quy trình phân tích">
+          <div class="sidebar-heading">QUY TRÌNH</div>
+          <nav id="navigation" aria-label="Các bước phân tích"></nav>
+          <div class="source-status" id="source-status"></div>
+        </aside>
+
+        <main id="workspace" aria-labelledby="view-title"></main>
+      </div>
+    </div>
+
+    <footer class="desktop-footer">
+      <span><span data-icon="shield"></span> Dữ liệu phân tích được xử lý trong phiên này</span>
+      <span class="platform"><span data-icon="globe"></span> DataLens Studio</span>
+    </footer>
+  </div>
+
+  <dialog id="dialog" aria-labelledby="dialog-title">
+    <div id="dialog-content"></div>
+  </dialog>
+</body>
+</html>

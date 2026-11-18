@@ -28,8 +28,24 @@ from crm.routes.analysis_routes import analysis_bp
 
 
 def create_app():
-    templates_dir = os.path.join(BASE_DIR, "crm", "templates")
-    static_dir = os.path.join(BASE_DIR, "crm", "static")
+    # Dynamic candidate paths for templates and static (compatible with local & Vercel Serverless)
+    candidate_template_dirs = [
+        os.path.join(BASE_DIR, "crm", "templates"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "crm", "templates"),
+        os.path.join(os.getcwd(), "crm", "templates"),
+        os.path.join(BASE_DIR, "templates"),
+        os.path.join(os.getcwd(), "templates"),
+    ]
+    templates_dir = next((p for p in candidate_template_dirs if os.path.isdir(p)), os.path.join(BASE_DIR, "crm", "templates"))
+
+    candidate_static_dirs = [
+        os.path.join(BASE_DIR, "crm", "static"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "crm", "static"),
+        os.path.join(os.getcwd(), "crm", "static"),
+        os.path.join(BASE_DIR, "static"),
+        os.path.join(os.getcwd(), "static"),
+    ]
+    static_dir = next((p for p in candidate_static_dirs if os.path.isdir(p)), os.path.join(BASE_DIR, "crm", "static"))
 
     app = Flask(
         __name__,
@@ -110,6 +126,33 @@ def create_app():
             roadmap_stage="Hệ thống",
             sample_items=[]
         ), 403
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        import traceback
+        err_detail = traceback.format_exc()
+        print(f"[500 Error Captured]:\n{err_detail}")
+        try:
+            return render_template(
+                "shared/placeholder_page.html",
+                active_page="500",
+                page_title="Đang Tải Dữ Liệu Phiên (500)",
+                page_subtitle="Hệ thống đang khởi tạo dịch vụ phiên làm việc. Vui lòng tải lại trang sau giây lát.",
+                page_icon="fa-solid fa-rotate",
+                roadmap_stage="Hệ thống",
+                sample_items=[]
+            ), 500
+        except Exception:
+            return (
+                "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Soconie CRM</title></head>"
+                "<body style='font-family:system-ui,-apple-system,sans-serif;padding:48px 24px;background:#f8fafc;color:#1e293b;max-width:680px;margin:auto;text-align:center;'>"
+                "<div style='font-size:48px;margin-bottom:16px;'>⏳</div>"
+                "<h2 style='font-size:24px;font-weight:700;margin-bottom:8px;'>Hệ thống đang khởi tạo dịch vụ</h2>"
+                "<p style='color:#64748b;margin-bottom:24px;'>Phiên làm việc đang hoàn tất kết nối. Vui lòng bấm nút bên dưới để tải lại.</p>"
+                "<a href='/' style='display:inline-block;padding:10px 24px;background:#4f46e5;color:#fff;border-radius:12px;font-weight:600;text-decoration:none;'>Tải lại trang</a>"
+                "</body></html>",
+                500
+            )
 
     return app
 
